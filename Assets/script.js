@@ -2,9 +2,15 @@
 Global Variables: what needs to be stored and referenced in multiple function
 
 var request URLS with unique name (url for 5 day forcase/ url for lat and long....)
-
+    var weatherAPI = https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
+    var latLonApi = url
 var Store API keys
 var Element Selectors (multiple)
+var currentDate use DAYJS
+var searchBtnEl
+var searchInputEl = document.queryselector("#") maybe decide if you want to use jquery
+
+
 */
 
 // FUNCTIONS
@@ -22,7 +28,7 @@ var Element Selectors (multiple)
                 // call function that saves recent searches
                 
 
-            // function coords(){}
+            // function getCoordinates(city){}
                 // fetch request to lat/long api
                 // .then convert to JSON format
                 //.then - receieve and extract coord data
