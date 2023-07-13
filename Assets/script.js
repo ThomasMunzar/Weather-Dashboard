@@ -3,7 +3,7 @@ Global Variables: what needs to be stored and referenced in multiple function
 
 var request URLS with unique name (url for 5 day forcase/ url for lat and long....)
     var weatherAPI = https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59
-    var latLonApi = http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid=c69f185cd8ad396017eee39ad71c6f59
+    var latLonApi = https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 var Store API keys
 var Element Selectors (multiple)
 var currentDate use DAYJS
@@ -15,7 +15,7 @@ var searchInputEl = document.queryselector("#") maybe decide if you want to use 
 // Global Variables
 var myApiKey = "c69f185cd8ad396017eee39ad71c6f59"
 var weatherApi = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59";
-var latLonApi = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid=c69f185cd8ad396017eee39ad71c6f59";
+var latLonApi = "https://api.openweathermap.org/data/2.5/weather?q="+ city +"&appid="+ myApiKey;
 var storeApiKeys
 var currentDate = dayjs().format('MM-DD-YYYY h:mm'); 
 var searchBtnEl = $("#searchBtn");
@@ -25,11 +25,51 @@ var weatherForecastEl= $('#weatherForecast');
 var city;
 var stateCode;
 var countryCode;
-var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ","+ stateCode + ","+ countryCode +"&appid=" + myApiKey;
+var lat;
+var lon;
+//var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ","+ stateCode + ","+ countryCode +"&appid=" + myApiKey;
+
+
+function recentSearches(){}
+
+function search(city){
+    fetch(latLonApi)
+getCoordinates(city)
+.then(function(coordinates){
+    return getWeather(coordinates.lat, coordinates.lon);
+})
+.then(function(weatherData){
+    displayData(weatherData);
+})
+.catch(function(error){
+    console.log(error);
+
+});
+}
+
+function getCoordinates(){}
+
+function getWeather(){
+    fetch(weatherApi)
+    .then(function (response){
+        return response.json();
+    })
+}
+
+function displayData(){}
 
 
 
-// FUNCTIONS
+    searchBtnEl.on("click", function() {
+        // Get the city name from the input element
+        var city = searchInputEl.val();
+        // Call the search function with the city name
+        search(city);
+      });
+
+
+
+    // FUNCTIONS
 
         // Recent Searches- check localStorage
                 // function that displays data on the page
