@@ -15,22 +15,28 @@ var searchInputEl = document.queryselector("#") maybe decide if you want to use 
 // Global Variables
 var myApiKey = "c69f185cd8ad396017eee39ad71c6f59"
 var weatherApi = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59";
-var latLonApi = "https://api.openweathermap.org/data/2.5/weather?q="+ city +"&appid="+ myApiKey;
+
 var storeApiKeys
 var currentDate = dayjs().format('MM-DD-YYYY h:mm'); 
 var searchBtnEl = $("#searchBtn");
 var searchInputEl= $('#searchInput');
 var currentWeatherEl= $('#currentWeather');
 var weatherForecastEl= $('#weatherForecast');
-var city;
+
 var stateCode;
-var countryCode;
 var lat;
 var lon;
 //var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ","+ stateCode + ","+ countryCode +"&appid=" + myApiKey;
 
 
-function recentSearches(){}
+
+
+
+function recentSearches(city){
+    var history = JSON.parse(localStorage.getItem("cities"))||[]
+    history.push(city)
+    localStorage.setItem("cities",JSON.stringify(history))
+}
 
 function search(city){
     fetch(latLonApi)
@@ -49,23 +55,61 @@ getCoordinates(city)
 
 function getCoordinates(){}
 
-function getWeather(){
-    fetch(weatherApi)
-    .then(function (response){
-        return response.json();
+function getWeather(){}
+
+
+function fiveDayForecast(){
+    var city = $("#searchInput").val()
+        var latLonApi = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid="+ myApiKey + "&units=imperial";
+        fetch(latLonApi)
+
+    .then(function(response){
+    return response.json();
+    })
+    .then(function(data){
+        console.log(data)
+        var index = 1;
+        for (var i=7; i<data.list.length;i+=8){
+            var day = data.list[i]
+            var fiveDayCard = $("#card-"+index)
+            var dateEl = $("<p></p>").text(dayjs.unix(day.dt).format("MM-DD-YYYY"))
+            fiveDayCard.append(dateEl)
+            var tempEl = $("<p></p>").text(day.main.temp)
+            fiveDayCard.append(tempEl)
+            var windEl = $("<p></p>").text(day.wind.speed)
+            fiveDayCard.append(windEl)
+            var humEl = $("<p></p>").text(day.main.humidity)
+            fiveDayCard.append(humEl)
+            var imageEl =$("<p></p>").attr("src","https://openweathermap.org/img/wn/"+ day.weather[0].icon+".png")
+            index++
+        }
+
     })
 }
 
-function displayData(){}
 
 
+  
 
-    searchBtnEl.on("click", function() {
-        // Get the city name from the input element
-        var city = searchInputEl.val();
-        // Call the search function with the city name
-        search(city);
-      });
+      searchBtnEl.on("click", function(){
+        var city = $("#searchInput").val()
+        recentSearches(city)
+        var latLonApi = "https://api.openweathermap.org/data/2.5/weather?q="+ city +"&appid="+ myApiKey + "&units=imperial";
+        fetch(latLonApi)
+
+    .then(function(response){
+    return response.json();
+    })
+    .then(function(data){
+    console.log(data);
+    $("#city").text(city+" "+dayjs.unix(data.dt).format("MM-DD-YYYY"))
+    $("#weatherImage").attr("src","https://openweathermap.org/img/wn/"+ data.weather[0].icon+".png")
+    $("#temp").text(data.main.temp)
+    $("#wind").text(data.wind.speed)
+    $("#humitdity").text(data.main.humidity)
+    fiveDayForecast()
+     })
+    })
 
 
 
