@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    border: green dashed;
+}
+
+.container2{
+    display: flex;
+    border: purple dashed;
+}
+.column1{
+    flex-basis: 300px;
+}
+.column2{
+    flex-basis: 300px;
+}

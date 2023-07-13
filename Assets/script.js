@@ -2,8 +2,8 @@
 Global Variables: what needs to be stored and referenced in multiple function
 
 var request URLS with unique name (url for 5 day forcase/ url for lat and long....)
-    var weatherAPI = https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
-    var latLonApi = url
+    var weatherAPI = https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59
+    var latLonApi = http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid=c69f185cd8ad396017eee39ad71c6f59
 var Store API keys
 var Element Selectors (multiple)
 var currentDate use DAYJS
@@ -12,6 +12,22 @@ var searchInputEl = document.queryselector("#") maybe decide if you want to use 
 
 
 */
+// Global Variables
+var myApiKey = "c69f185cd8ad396017eee39ad71c6f59"
+var weatherApi = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59";
+var latLonApi = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid=c69f185cd8ad396017eee39ad71c6f59";
+var storeApiKeys
+var currentDate = dayjs().format('MM-DD-YYYY h:mm'); 
+var searchBtnEl = $("#searchBtn");
+var searchInputEl= $('#searchInput');
+var currentWeatherEl= $('#currentWeather');
+var weatherForecastEl= $('#weatherForecast');
+var city;
+var stateCode;
+var countryCode;
+var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ","+ stateCode + ","+ countryCode +"&appid=" + myApiKey;
+
+
 
 // FUNCTIONS
 
