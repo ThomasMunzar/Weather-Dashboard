@@ -34,7 +34,8 @@ function displayRecentSearches() {
     }
     $(".recent-search").on("click",function(){
         var city=$(this).text();
-        search(city);
+        fiveDayForecast(city);
+        updateFirstDay(city);
     });
   }
   
@@ -55,8 +56,13 @@ getCoordinates(city)
 }
 
 
-function fiveDayForecast(){
-    var city = $("#searchInput").val()
+function fiveDayForecast(searchCity){
+    var city;
+    if (!searchCity) {
+    city = $("#searchInput").val()
+    }else{
+        city=searchCity
+    }
         var latLonApi = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid="+ myApiKey + "&units=imperial";
         $("#weatherForecast").empty();
         fetch(latLonApi)
@@ -87,13 +93,23 @@ function fiveDayForecast(){
 
     })
 }
+searchBtnEl.on("click",function(){
+    updateFirstDay()
+})
 
+function updateFirstDay(searchCity){
+    var city;
+    if (!searchCity){
+        city=$("#searchInput").val()
+
+    } else{
+        city = searchCity
+    }
 
 
   
 
-      searchBtnEl.on("click", function(){ // this was the first function i started with, the initial search leads to everything else on the page.
-        var city = $("#searchInput").val()
+      
         recentSearches(city)
         var latLonApi = "https://api.openweathermap.org/data/2.5/weather?q="+ city +"&appid="+ myApiKey + "&units=imperial";
         fetch(latLonApi)
@@ -109,8 +125,8 @@ function fiveDayForecast(){
     $("#wind").text("Wind: "+ data.wind.speed)
     $("#humitdity").text("Humitdity: "+data.main.humidity)
     fiveDayForecast()
-     })
     })
+}
     
 
 
