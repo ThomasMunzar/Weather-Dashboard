@@ -1,17 +1,30 @@
-.container {
+.container{
+    margin-top: 20px;
+}
+.container2{
     display: flex;
-    border: green dashed;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
-.container2 {
-    display: flex;
-    border: purple dashed;
+#currentWeather{
+    background-color: pink;
+   flex:1;
+   margin-right: 20px;
 }
 
-.column1 {
-    flex-basis: 300px;
+#weatherForecast{
+    background-color: lightblue;
+   flex:1;
 }
 
-.column2 {
-    flex-basis: 300px;
+#card-1,#card-2,#card-3,#card-4,#card-5{
+    margin-bottom: 20px;
+    
 }
+
+
+
+
+
+

@@ -1,17 +1,4 @@
-/*
-Global Variables: what needs to be stored and referenced in multiple function
 
-var request URLS with unique name (url for 5 day forcase/ url for lat and long....)
-    var weatherAPI = https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59
-    var latLonApi = https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-var Store API keys
-var Element Selectors (multiple)
-var currentDate use DAYJS
-var searchBtnEl
-var searchInputEl = document.queryselector("#") maybe decide if you want to use jquery
-
-
-*/
 // Global Variables
 var myApiKey = "c69f185cd8ad396017eee39ad71c6f59"
 var weatherApi = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=c69f185cd8ad396017eee39ad71c6f59";
@@ -23,20 +10,34 @@ var searchInputEl= $('#searchInput');
 var currentWeatherEl= $('#currentWeather');
 var weatherForecastEl= $('#weatherForecast');
 
-var stateCode;
-var lat;
-var lon;
-//var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ","+ stateCode + ","+ countryCode +"&appid=" + myApiKey;
-
-
-
-
-
+// FUNCTIONS
 function recentSearches(city){
-    var history = JSON.parse(localStorage.getItem("cities"))||[]
+    var history = JSON.parse(localStorage.getItem("cities"))||[];
+    if (!history.includes(city)){ //This code will make the localStorage not display repeat cities in the recent search area.
     history.push(city)
-    localStorage.setItem("cities",JSON.stringify(history))
+    localStorage.setItem("cities"
+    ,JSON.stringify(history))
+    }
+    displayRecentSearches()
 }
+
+function displayRecentSearches() {
+    var history = JSON.parse(localStorage.getItem("cities")) || [];
+    var recentSearchesEl = $("#recentSearches");
+  
+    recentSearchesEl.empty(); // Clear previous content
+  
+    for (var i = 0; i < history.length; i++) { //iterates through history array and creates a buttons for that history item.
+      var cityBtn = $("<button>").text(history[i]);
+      cityBtn.addClass("recent-search");
+      recentSearchesEl.append(cityBtn);
+    }
+    $(".recent-search").on("click",function(){
+        var city=$(this).text();
+        search(city);
+    });
+  }
+  
 
 function search(city){
     fetch(latLonApi)
@@ -53,17 +54,14 @@ getCoordinates(city)
 });
 }
 
-function getCoordinates(){}
-
-function getWeather(){}
-
 
 function fiveDayForecast(){
     var city = $("#searchInput").val()
         var latLonApi = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid="+ myApiKey + "&units=imperial";
+        $("#weatherForecast").empty();
         fetch(latLonApi)
 
-    .then(function(response){
+    .then(function(response){ 
     return response.json();
     })
     .then(function(data){
@@ -71,17 +69,20 @@ function fiveDayForecast(){
         var index = 1;
         for (var i=7; i<data.list.length;i+=8){
             var day = data.list[i]
-            var fiveDayCard = $("#card-"+index)
+            var fiveDayCard = $("<div>").attr("id", "card-"+index);
             var dateEl = $("<p></p>").text(dayjs.unix(day.dt).format("MM-DD-YYYY"))
             fiveDayCard.append(dateEl)
-            var tempEl = $("<p></p>").text(day.main.temp)
+            var tempEl = $("<p></p>").text("Temperature: "+ day.main.temp)
             fiveDayCard.append(tempEl)
-            var windEl = $("<p></p>").text(day.wind.speed)
+            var windEl = $("<p></p>").text("Wind: "+ day.wind.speed)
             fiveDayCard.append(windEl)
-            var humEl = $("<p></p>").text(day.main.humidity)
+            var humEl = $("<p></p>").text("Humidity: "+ day.main.humidity)
             fiveDayCard.append(humEl)
-            var imageEl =$("<p></p>").attr("src","https://openweathermap.org/img/wn/"+ day.weather[0].icon+".png")
+            var imageEl =$("<img>").attr("src","https://openweathermap.org/img/wn/"+ day.weather[0].icon+".png")
+            fiveDayCard.append(imageEl)
+            $("#weatherForecast").append(fiveDayCard);
             index++
+            
         }
 
     })
@@ -91,7 +92,7 @@ function fiveDayForecast(){
 
   
 
-      searchBtnEl.on("click", function(){
+      searchBtnEl.on("click", function(){ // this was the first function i started with, the initial search leads to everything else on the page.
         var city = $("#searchInput").val()
         recentSearches(city)
         var latLonApi = "https://api.openweathermap.org/data/2.5/weather?q="+ city +"&appid="+ myApiKey + "&units=imperial";
@@ -102,14 +103,15 @@ function fiveDayForecast(){
     })
     .then(function(data){
     console.log(data);
-    $("#city").text(city+" "+dayjs.unix(data.dt).format("MM-DD-YYYY"))
+    $("#city").text("City: "+ city+" "+dayjs.unix(data.dt).format("MM-DD-YYYY"))
     $("#weatherImage").attr("src","https://openweathermap.org/img/wn/"+ data.weather[0].icon+".png")
-    $("#temp").text(data.main.temp)
-    $("#wind").text(data.wind.speed)
-    $("#humitdity").text(data.main.humidity)
+    $("#temp").text("Temperature: "+data.main.temp)
+    $("#wind").text("Wind: "+ data.wind.speed)
+    $("#humitdity").text("Humitdity: "+data.main.humidity)
     fiveDayForecast()
      })
     })
+    
 
 
 
